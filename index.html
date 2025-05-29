@@ -1,0 +1,1000 @@
+<!-- -----------------------------------------------
+Automatic Marbles v1.0
+(c) 2025 Marco Fenner
+
+Urheberrechtlich geschützt.
+Kopieren erlaubt.
+Verändern nur mit Namensnennung des Autors ;-)
+Danke und Viel Spaß!
+------------------------------------------------ -->
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mein Browsergame</title>
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+
+    <meta name="description" content="Automatic Marbles v1.0 - Ein faszinierendes Zero-Player-Game von Marco Fenner. Beobachten Sie, wie Murmeln ihren Weg zum Ziel finden und sammeln Sie Punkte.">
+    <meta name="keywords" content="Zero-Player Game, Automatic Marbles, Murmelspiel, Online Spiel, Browsergame, Marco Fenner, kostenlos, entspannend, Simulation">
+    <meta name="author" content="Marco Fenner">
+    <meta name="robots" content="index, follow"> <link rel="canonical" href="https://fennertech.github.io/marbles/"> <meta property="og:title" content="Automatic Marbles v1.0 - Das Zero-Player-Game">
+    <meta property="og:description" content="Beobachten Sie, wie Murmeln ihren Weg zum Ziel finden und sammeln Sie Punkte in diesem einzigartigen Zero-Player-Game.">
+    <meta property="og:url" content="https://fennertech.github.io/marbles/">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://fennertech.github.io/marbles/social-share-image.png"> <meta property="og:locale" content="de_DE">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Automatic Marbles v1.0 - Das Zero-Player-Game">
+    <meta name="twitter:description" content="Beobachten Sie, wie Murmeln ihren Weg zum Ziel finden und sammeln Sie Punkte in diesem einzigartigen Zero-Player-Game.">
+    <meta name="twitter:image" content="https://fennertech.github.io/marbles/social-share-image.png"> <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Grundlegende Stile für den gesamten Viewport */
+        html, body {
+            margin: 0;
+            padding: 0.5rem; /* p-2: Fügt einen inneren Abstand hinzu, um die Ränder freizuhalten */
+            overflow: hidden; /* Verhindert Scrollbalken */
+            height: 100%; /* Nimmt die volle volle Höhe des Viewports ein */
+            font-family: 'Inter', sans-serif; /* Standard-Schriftart */
+            background-color: #333; /* Dunkelgrauer Hintergrund */
+            color: #fff; /* Weiße Schriftfarbe */
+            box-sizing: border-box; /* Stellt sicher, dass Padding zur Gesamtgröße gehört */
+        }
+
+        /* Sicherstellen, dass der Hauptcontainer die volle Höhe einnimmt */
+        #game-container {
+            height: 100%;
+            display: flex;
+            height: 100%; /* Jetzt 100% der verfügbaren Höhe nach Padding im Body */
+            width: 100%; /* Jetzt 100% der verfügbaren Breite nach Padding im Body */
+        }
+
+        /* Info-Bereich (linkes Viertel) */
+        #info-area {
+            width: 25%; /* w-1/4 */
+            padding: 1rem; /* p-4 */
+            border: 1px solid #4b5563; /* border border-gray-600 */
+            border-radius: 0.5rem; /* rounded-lg */
+            display: flex; /* flex */
+            flex-direction: column; /* flex-col */
+            justify-content: space-between; /* justify-between */
+            margin-right: 0.5rem; /* Kleiner Abstand zum Spielfeld */
+        }
+
+        /* Titel des Spiels */
+        #info-area h2 {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            margin-bottom: 0.5rem; /* mb-2 */
+        }
+
+        /* Spielbeschreibung und Link */
+        #info-area p.text-lg {
+            font-size: 1.125rem; /* text-lg */
+            color: #d1d5db; /* text-gray-300 */
+            margin-bottom: 1rem; /* mb-4 */
+        }
+
+        #info-area a {
+            color: #60a5fa; /* text-blue-400 */
+            text-decoration: underline; /* underline */
+        }
+
+        #info-area a:hover {
+            color: #93c5fd; /* hover:text-blue-300 */
+        }
+
+        /* Flex-Grow für den mittleren Bereich */
+        #info-area .flex-grow {
+            flex-grow: 1; /* flex-grow */
+        }
+
+        /* Gesamtpunktzahl */
+        #score-display {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 800; /* font-extrabold */
+            text-align: center; /* text-center */
+            margin-top: 1rem; /* mt-4 */
+            color: #fcd34d; /* text-yellow-300 */
+        }
+
+        /* Errungenschaften Bereich */
+        #achievements-area {
+            margin-top: 2rem; /* mt-8 */
+            margin-bottom: 2rem; /* mb-8 */
+        }
+
+        #achievements-area h3 {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 600; /* font-semibold */
+            margin-bottom: 0.5rem; /* mb-2 */
+        }
+
+        #achievements-area table {
+            width: 100%; /* w-full */
+            text-align: left; /* text-left */
+            font-size: 0.875rem; /* text-sm */
+        }
+
+        #achievements-area thead tr {
+            border-bottom: 1px solid #4b5563; /* border-b border-gray-600 */
+        }
+
+        #achievements-area th {
+            padding-top: 0.25rem; /* py-1 */
+            padding-bottom: 0.25rem; /* py-1 */
+        }
+
+        #achievements-area td {
+            padding-top: 0.25rem; /* py-1 */
+            padding-bottom: 0.25rem; /* py-1 */
+        }
+
+        #achievements-area td.pr-2 {
+            padding-right: 0.5rem; /* pr-2 */
+        }
+
+        #achievements-area .text-green-400 {
+            color: #4ade80; /* text-green-400 */
+        }
+
+        #achievements-area .text-gray-500 {
+            color: #6b7280; /* text-gray-500 */
+        }
+
+        /* Buttons Container */
+        #button-container { /* Spezifischer Selektor für den Button-Container */
+            margin-top: 1rem; /* mt-4 */
+            display: flex; /* flex */
+            justify-content: center; /* justify-content: center; für horizontale Zentrierung */
+            gap: 0.5rem; /* space-x-2 */
+            width: 100%; /* Sicherstellen, dass der Container die volle Breite einnimmt */
+        }
+
+        /* Buttons */
+        #button-container button {
+            font-weight: 700; /* font-bold */
+            padding: 0.5rem 1rem; /* py-2 px-4 - Etwas kleiner als vorher */
+            font-size: 1rem; /* text-base - Etwas kleiner als vorher */
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
+            color: #fff; /* text-white */
+            transition: background-color 0.15s ease-in-out, opacity 0.15s ease-in-out; /* Für Hover-Effekt und Deaktivierung */
+            cursor: pointer; /* Zeigt an, dass es klickbar ist */
+            flex-grow: 0; /* Buttons füllen den verfügbaren Platz aus */
+            text-align: center; /* Text zentrieren */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Leichter Textschatten für bessere Lesbarkeit */
+            letter-spacing: 0.05em; /* Leichter Zeichenabstand */
+        }
+
+        /* Deaktivierter Button Stil */
+        #button-container button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Copyright-Text */
+        #info-area > div:last-of-type > p { /* Spezifischer Selektor für den Copyright-Text */
+            margin-top: 0.5rem; /* Abstand auf einen Zeilenumbruch reduziert */
+            text-align: center; /* text-center */
+            font-size: 0.875rem; /* text-sm */
+            color: #9ca3af; /* text-gray-400 */
+        }
+
+        /* Besucherzähler-Text */
+        #visitor-counter-area {
+            margin-top: 1rem; /* Abstand über dem Zähler */
+            margin-bottom: 0.5rem; /* Abstand unter dem Zähler auf einen Zeilenumbruch reduziert */
+            font-size: 0.875rem; /* text-sm */
+            color: #9ca3af; /* text-gray-400 */
+            text-align: center; /* Zentriert den Textinhalt */
+            white-space: nowrap; /* Verhindert Zeilenumbruch */
+        }
+
+        #visitor-counter-area span {
+            /* Sicherstellen, dass die Spans inline sind und keine unerwünschten Abstände haben */
+            display: inline;
+            margin: 0 0.25rem; /* Kleiner horizontaler Abstand zwischen den Werten */
+            padding: 0;
+        }
+
+        /* Spielfeld */
+        #game-field {
+            width: 75%; /* w-3/4 */
+            height: 100%; /* h-full */
+            background-color: #374151; /* bg-gray-700 */
+            border-radius: 0.5rem; /* rounded-lg */
+            box-sizing: border-box; /* Stellt sicher, dass Padding zur Gesamtgröße gehört */
+            margin-left: 0.5rem; /* Kleiner Abstand zum Info-Bereich */
+        }
+
+        /* Allgemeine Modal Stile */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000; /* Sicherstellen, dass es über allem liegt */
+        }
+
+        .modal-content {
+            background-color: #374151; /* bg-gray-700 */
+            padding: 2rem; /* p-8 */
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-xl */
+            text-align: center;
+            max-width: 600px; /* Breiter für Impressum */
+            color: #fff;
+            position: relative; /* Für absolute Positionierung des Close-Buttons */
+            max-height: 90vh; /* Maximale Höhe des Modals */
+            display: flex; /* Flexbox für Inhalt und Footer */
+            flex-direction: column;
+        }
+
+        .modal-content h3 {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 700; /* font-bold */
+            margin-bottom: 1rem; /* mb-4 */
+            text-align: left;
+        }
+
+        .modal-content p {
+            font-size: 1rem; /* text-base */
+            margin-bottom: 1rem; /* mb-4 */
+            text-align: left;
+            line-height: 1.5;
+        }
+
+        .modal-content .modal-text-content {
+            overflow-y: auto; /* Scrollbalken für Inhalt */
+            flex-grow: 1; /* Nimmt verfügbaren Platz ein */
+            padding-right: 1rem; /* Platz für Scrollbar */
+            margin-bottom: 1rem; /* Abstand zum Footer */
+        }
+        
+        .modal-content .modal-text-content strong {
+            color: #fcd34d; /* Hellgelb für Überschriften im Impressum */
+        }
+
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem; /* space-x-4 */
+            margin-top: 1rem; /* Abstand zum Inhalt */
+            flex-shrink: 0; /* Verhindert Schrumpfen des Buttons */
+        }
+
+        /* Modal Buttons - Vergrößert und lesbarer */
+        .modal-buttons button, .modal-close-button {
+            font-weight: 700; /* font-bold */
+            padding: 0.75rem 1.5rem; /* py-3 px-6 - Vergrößert */
+            font-size: 1.125rem; /* text-lg - Vergrößert */
+            border-radius: 0.5rem; /* rounded-lg */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
+            color: #fff; /* text-white */
+            transition: background-color 0.15s ease-in-out; /* Für Hover-Effekt */
+            cursor: pointer; /* Zeigt an, dass es klickbar ist */
+            flex-grow: 0; /* Nicht flex-grow:1, damit sie nicht den ganzen Platz einnehmen */
+            text-align: center; /* Text zentrieren */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Leichter Textschatten für bessere Lesbarkeit */
+            letter-spacing: 0.05em; /* Leichter Zeichenabstand */
+        }
+
+        .modal-close-button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #fff;
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+            line-height: 1;
+            box-shadow: none;
+        }
+        .modal-close-button:hover {
+            color: #ef4444; /* Rot beim Hover */
+        }
+
+        /* Klasse zum Ein-/Ausblenden */
+        .hidden {
+            display: none !important; /* Wichtig, um display:flex zu überschreiben */
+        }
+    </style>
+</head>
+<body class="bg-gray-800 text-white">
+    <script language="JavaScript" src="https://www.besucherzaehler-kostenlos.de/js/counter.js.php?count=1&id=fennertech.github.iomarbles&start=0&design=6"></script>
+
+    <div id="game-container">
+        <div id="info-area">
+            <h2>Automatic Marbles v1.0</h2>
+            <p>
+                Ein neues Zero-Player-Game<br>
+                vom <a href="mailto:datenschrauber@posteo.de">Datenschrauber</a>
+            </p>
+            <div class="flex-grow">
+                <p id="score-display">0</p>
+
+                <div id="achievements-area">
+                    <h3>Errungenschaften</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ziel</th>
+                                <th>Erreicht am</th>
+                            </tr>
+                        </thead>
+                        <tbody id="achievements-list">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="button-container">
+                <button id="reset-button" class="bg-red-600">
+                    X
+                </button>
+                <button id="impressum-button" class="bg-blue-600">
+                    i
+                </button>
+                <button id="new-marble-button" class="bg-green-600">
+                    Neue Murmel!
+                </button>
+            </div>
+
+            <div id="visitor-counter-area">
+                <span>O: <span class="BZonline"></span></span> |
+                <span>H: <span class="BZheute"></span></span> |
+                <span>G: <span class="BZgestern"></span></span> |
+                <span>T: <span class="BZgesamt"></span></span> |
+                <span>S: <span class="BZseit"></span></span>
+            </div>
+
+            <div>
+                <p>(c) 2025 ff. Marco Fenner</p>
+            </div>
+        </div>
+
+        <div id="game-field">
+            </div>
+    </div>
+
+    <div id="reset-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <p>Möchten Sie den Spielstand und alle Errungenschaften wirklich zurücksetzen?</p>
+            <div class="modal-buttons">
+                <button id="reset-confirm-yes" class="bg-red-600">Ja</button>
+                <button id="reset-confirm-no" class="bg-blue-600">Nein</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="impressum-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button id="impressum-close" class="modal-close-button">X</button>
+            <h3>Informationen zum Spiel / Impressum</h3>
+            <div class="modal-text-content">
+                <p><strong>Angaben gemäß § 5 TMG</strong><br>
+                Betreiber der Website:<br>
+                Marco Fenner<br>
+                Wiardastraße 19<br>
+                26603 Aurich<br>
+                Deutschland</p>
+
+                <p><strong>Kontakt:</strong><br>
+                E-Mail: <a href="mailto:datenschrauber@posteo.de" class="text-blue-400 hover:text-blue-300 underline">datenschrauber@posteo.de</a><br>
+                Telefon: +49 1573 004 2105</p>
+
+                <p>Vielen Dank für den Besuch meiner Website.<br>
+                Wenn Sie Ihnen gefallen hat, würde ich mich über eine kurze Nachricht sehr freuen. 😊</p>
+
+                <p><strong>Haftungsausschluss:</strong></p>
+                <p><strong>Haftung für Inhalte</strong><br>
+                Als Diensteanbieter bin ich gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG bin ich als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen. Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung möglich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werde ich diese Inhalte umgehend entfernen.</p>
+
+                <p><strong>Haftung für Links</strong><br>
+                Mein Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte ich keinen Einfluss habe. Deshalb kann ich für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar. Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist jedoch ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen werde ich derartige Links umgehend entfernen.</p>
+
+                <p><strong>Urheberrecht</strong><br>
+                Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers. Downloads und Kopien dieser Seite sind nur für den privaten, nicht kommerziellen Gebrauch gestattet. Soweit die Inhalte auf dieser Seite nicht vom Betreiber erstellt wurden, werden die Urheberrechte Dritter beachtet. Insbesondere werden Inhalte Dritter als solche gekennzeichnet. Sollten Sie trotzdem auf eine Urheberrechtsverletzung aufmerksam werden, bitte ich um einen entsprechenden Hinweis. Bei Bekanntwerden von Rechtsverletzungen werde ich diese Inhalte umgehend entfernen.</p>
+
+                <p><strong>Datenschutz:</strong><br>
+                Die Nutzung meiner Webseite ist in der Regel ohne Angabe personenbezogener Daten möglich. Soweit auf meinen Seiten personenbezogene Daten (beispielsweise Name, Anschrift oder E-Mail-Adressen) erhoben werden, erfolgt dies, soweit möglich, stets auf freiwilliger Basis. Diese Daten werden ohne Ihre ausdrückliche Zustimmung nicht an Dritte weitergegeben. Ich weise darauf hin, dass die Datenübertragung im Internet (z.B. bei der Kommunikation per E-Mail) Sicherheitslücken aufweisen kann. Ein lückenloser Schutz der Daten vor dem Zugriff durch Dritte ist nicht möglich.</p>
+
+                <p><strong>Besucherzähler von besucherzaehler-kostenlos.de</strong><br>
+                Diese Webseite verwendet einen externen Zähler, um die Anzahl der Webseitenaufrufe zu erfassen. Dafür wird ein Java-Script von einer externe Webseite geladen. Der Server von besucherzaehler-kostenlos.de speichert die IP-Adresse des Zugriffs anonymisiert und zeitlich begrenzt in einer LOG-Datei ab. Diese wird regelmäßig unwiderruflich gelöscht.<br>
+                Um die korrekte Funktionsweise des Zählers zu gewährleisten, speichert der Besucherzähler zudem einen sogenannten Session-Cookie auf dem Computer des Besuchers ab. Dieser wird in der Regel vom Browser gelöscht, sobald er geschlossen wird. In diesem Cookie werden keine persönlichen Informationen gespeichert. Er enthält lediglich die Information der aufgerufenen Domain, sowie einen boolschen Tag (true/false), um den Besucher als bereits gezählt zu markieren.<br>
+                Es werden auch darüberhinaus keine persönlichen oder personenbezogenen Daten vom Besucherzähler erhoben. Eine Nachverfolgung oder Zuordnung der Zugriffe ist zu keiner Zeit möglich. Ein besonderer Dank geht an www.howtodocentral.com, durch dessen Unterstützung dieser kostenlose Service erst möglich gemacht wird.</p>
+
+                <p><strong>Einsehbarkeit des Quellcodes:</strong><br>
+                Der Quellcode dieser Seite ist vollständig für jedermann einsehbar.</p>
+
+                <p><strong>Besucherzähler-Abkürzungen:</strong><br>
+                O = Besucher aktuell online<br>
+                H = Besucher heute<br>
+                G = Besucher gestern<br>
+                T = Besucher gesamt<br>
+                S = Seit - Beginn der Zählung</p>
+            </div>
+            <div class="modal-buttons">
+                <button id="impressum-ok" class="bg-blue-600">Ok</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="cookie-consent-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3>Cookie-Hinweis</h3>
+            <div class="modal-text-content">
+                <p>Diese Website verwendet Cookies, um die Funktionalität zu gewährleisten und den Besucherzähler zu betreiben. Mit der Nutzung der Website stimmen Sie der Verwendung von Cookies zu.</p>
+                <p>Weitere Informationen finden Sie in unserem <a href="#" id="cookie-impressum-link" class="text-blue-400 hover:text-blue-300 underline">Impressum</a>.</p>
+            </div>
+            <div class="modal-buttons">
+                <button id="cookie-consent-ok" class="bg-blue-600">Ok</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Referenz zum Spielfeld-Container und Erstellung des Canvas-Elements
+        const gameField = document.getElementById('game-field');
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        // Vorhandenen Platzhalter-Inhalt entfernen und Canvas hinzufügen
+        gameField.innerHTML = ''; // Sicherstellen, dass keine alten Inhalte stören
+        gameField.appendChild(canvas);
+
+        // Spielvariablen
+        let marbles = []; // Array für alle aktiven Murmeln
+        let lastSpawnTime = Date.now(); // Zeitpunkt der letzten Murmel-Erzeugung
+        let nextSpawnInterval = getRandomInt(5000, 15000); // Zufälliges Intervall für die nächste Murmel (5 bis 15 Sekunden)
+
+        const MARBLE_RADIUS = 10; // Radius der Murmeln in Pixeln
+
+        // Eingang und Ausgang Positionen (relativ zum Canvas)
+        let entranceX, entranceY, exitX, exitY;
+
+        // Global variables for achievements
+        let achievements = [];
+        // Definierte Schwellenwerte für Errungenschaften
+        // Die letzte Errungenschaft (2.000.000) ist basierend auf ca. 5 Jahren Spielzeit bei 8h/Tag
+        const achievementThresholds = [
+            1, 10, 100, 500, 1000, 2500, 5000, 10000, 25000, 50000,
+            100000, 250000, 500000, 1000000, 1500000, 2000000
+        ];
+
+        /**
+         * Aktualisiert die Positionen von Eingang und Ausgang basierend auf der aktuellen Canvas-Größe.
+         * Wird bei der Initialisierung und bei jeder Größenänderung des Fensters aufgerufen.
+         */
+        function setEntranceExitPositions() {
+            // Eingang: Oben links, mit etwas Abstand vom Rand
+            entranceX = MARBLE_RADIUS * 2;
+            entranceY = MARBLE_RADIUS * 2;
+            // Ausgang: Unten rechts, mit etwas Abstand vom Rand
+            exitX = canvas.width - MARBLE_RADIUS * 2;
+            exitY = canvas.height - MARBLE_RADIUS * 2;
+        }
+
+        /**
+         * Passt die Größe des Canvas-Elements an die Größe seines Elternelements an.
+         * Ruft anschließend `setEntranceExitPositions` auf, um die Spielbereiche neu zu positionieren.
+         * Und `drawGame`, um den Inhalt neu zu zeichnen.
+         */
+        function resizeCanvas() {
+            canvas.width = gameField.clientWidth;
+            canvas.height = gameField.clientHeight;
+            setEntranceExitPositions(); // Positionen nach Größenänderung anpassen
+            drawGame(); // Spielinhalt neu zeichnen
+        }
+
+        // Event Listener für Größenänderung des Fensters, um das Canvas anzupassen
+        window.addEventListener('resize', resizeCanvas);
+
+        /**
+         * Generiert eine zufällige Ganzzahl zwischen min (inklusiv) und max (inklusiv).
+         * @param {number} min - Der minimale Wert.
+         * @param {number} max - Der maximale Wert.
+         * @returns {number} Eine zufällige Ganzzahl.
+         */
+        function getRandomInt(min, max) {
+            min = Math.ceil(min);
+            max = Math.floor(max);
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        /**
+         * Repräsentiert eine einzelne Murmel im Spiel.
+         */
+        class Marble {
+            /**
+             * Erstellt eine neue Murmel.
+             * @param {number} id - Eine eindeutige ID für die Murmel.
+             */
+            constructor(id) {
+                this.id = id;
+                this.x = entranceX; // Startposition X (Eingang)
+                this.y = entranceY; // Startposition Y (Eingang)
+                this.radius = MARBLE_RADIUS;
+                // Zufällige, lebendige Farbe, die sich gut vom Hintergrund abhebt
+                this.color = `hsl(${Math.random() * 360}, 70%, 60%)`;
+                this.spawnTime = Date.now(); // Zeitpunkt der Erzeugung
+                this.reachedExitTime = null; // Zeitpunkt, zu dem die Murmel den Ausgang erreicht hat (null, wenn nicht erreicht)
+                this.markedForRemoval = false; // Markierung, ob die Murmel entfernt werden soll
+
+                // Zufällige Zielzeit zwischen 10 und 60 Sekunden (10000ms bis 60000ms)
+                const targetTimeMs = getRandomInt(10000, 60000);
+
+                // Berechne die direkte Distanz vom Eingang zum Ausgang
+                const directDistance = Math.hypot(exitX - entranceX, exitY - entranceY);
+
+                // Berechne die durchschnittliche Geschwindigkeit, die benötigt wird, um die direkte Distanz in targetTimeMs zu überwinden
+                this.targetSpeed = directDistance / targetTimeMs;
+
+                // Sicherstellen einer Mindestgeschwindigkeit, damit die Murmel immer sichtbar ist
+                const MIN_MARBLE_SPEED = 0.05; // 50 Pixel pro Sekunde
+                if (this.targetSpeed < MIN_MARBLE_SPEED) {
+                    this.targetSpeed = MIN_MARBLE_SPEED;
+                }
+
+                // Initialisiere Geschwindigkeiten mit einer Tendenz zum Ausgang und großer zufälliger Abweichung
+                const initialAngleToExit = Math.atan2(exitY - entranceY, exitX - entranceX);
+                // Erlaube eine sehr breite initiale Winkelabweichung für zufällige Pfade
+                const initialRandomAngleOffset = (Math.random() * 2 - 1) * Math.PI; // +/- 180 Grad
+                const initialDesiredAngle = initialAngleToExit + initialRandomAngleOffset;
+
+                this.vx = Math.cos(initialDesiredAngle) * this.targetSpeed;
+                this.vy = Math.sin(initialDesiredAngle) * this.targetSpeed;
+
+                // Steuerungsstärke: Wie stark die Murmel versucht, ihren Pfad zum Ausgang zu korrigieren
+                // Ein leicht erhöhter Wert, um die Zielerreichung innerhalb der Zeit zu garantieren.
+                this.steeringStrength = 0.001;
+            }
+
+            /**
+             * Zeichnet die Murmel auf dem Canvas.
+             * @param {CanvasRenderingContext2D} ctx - Der 2D-Rendering-Kontext des Canvas.
+             */
+            draw(ctx) {
+                // Hauptkörper der Murmel zeichnen
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                ctx.strokeStyle = '#fff'; // Weißer Rand
+                ctx.lineWidth = 1;
+                ctx.stroke();
+                ctx.closePath();
+
+                // Lichtpunkt für 3D-Effekt zeichnen
+                ctx.beginPath();
+                const lightSpotRadius = this.radius * 0.3; // Kleinerer Radius für den Lichtpunkt
+                const lightSpotX = this.x - this.radius * 0.4; // Versatz von der Mitte (oben links)
+                const lightSpotY = this.y - this.radius * 0.4; // Versatz von der Mitte (oben links)
+                ctx.arc(lightSpotX, lightSpotY, lightSpotRadius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.8)'; // Halbtransparentes Weiß
+                ctx.fill();
+                ctx.closePath();
+            }
+
+            /**
+             * Aktualisiert den Zustand der Murmel (Position, Status).
+             * @param {number} deltaTime - Die seit dem letzten Update vergangene Zeit in Millisekunden.
+             */
+            update(deltaTime) {
+                // Wenn die Murmel den Ausgang erreicht hat, wird sie sofort entfernt
+                if (this.reachedExitTime) {
+                    this.markedForRemoval = true; // Sofort zum Entfernen markieren
+                    return;
+                }
+
+                // Position aktualisieren
+                this.x += this.vx * deltaTime;
+                this.y += this.vy * deltaTime;
+
+                // Kollisionserkennung mit den Rändern des Canvas und Abprallen
+                // Die Murmel soll das Spielfeld auf keinen Fall verlassen.
+                if (this.x + this.radius > canvas.width) {
+                    this.x = canvas.width - this.radius;
+                    this.vx *= -1; // Richtung umkehren
+                    // Zusätzliche zufällige Abweichung beim Abprallen für unvorhersehbare Wege
+                    this.vx += (Math.random() - 0.5) * this.targetSpeed * 0.5;
+                } else if (this.x - this.radius < 0) {
+                    this.x = this.radius;
+                    this.vx *= -1; // Richtung umkehren
+                    this.vx += (Math.random() - 0.5) * this.targetSpeed * 0.5;
+                }
+
+                if (this.y + this.radius > canvas.height) {
+                    this.y = canvas.height - this.radius;
+                    this.vy *= -1; // Richtung umkehren
+                    this.vy += (Math.random() - 0.5) * this.targetSpeed * 0.5;
+                } else if (this.y - this.radius < 0) {
+                    this.y = this.radius;
+                    this.vy *= -1; // Richtung umkehren
+                    this.vy += (Math.random() - 0.5) * this.targetSpeed * 0.5;
+                }
+
+                // Sanfte Lenkung zum Ausgang, um sicherzustellen, dass das Ziel erreicht wird.
+                // Diese Logik wird nur angewendet, wenn die Murmel nicht bereits sehr nah am Ausgang ist.
+                const distanceToExit = Math.hypot(this.x - exitX, this.y - exitY);
+                if (distanceToExit > this.radius * 2) { // Wenn noch nicht nah genug am Ausgang
+                    const angleToExit = Math.atan2(exitY - this.y, exitX - this.x);
+
+                    // Nudge aktuelle Geschwindigkeit in Richtung des Ausgangs
+                    const currentAngle = Math.atan2(this.vy, this.vx);
+                    const angleDifference = angleToExit - currentAngle;
+                    // Normalisiere angleDifference, um zwischen -PI und PI zu liegen
+                    const normalizedAngleDifference = Math.atan2(Math.sin(angleDifference), Math.cos(angleDifference));
+
+                    // Wende Lenkraft als Winkelanpassung an
+                    const steeringAngle = currentAngle + normalizedAngleDifference * this.steeringStrength;
+
+                    // Wende zufällige Winkelstörung an für unregelmäßigere Pfade
+                    const randomAngularPerturbation = (Math.random() * 2 - 1) * (Math.PI / 32); // +/- 5.6 Grad
+                    const finalAngle = steeringAngle + randomAngularPerturbation;
+
+                    // Aktualisiere Geschwindigkeiten, wobei die Zielgeschwindigkeit beibehalten wird
+                    this.vx = Math.cos(finalAngle) * this.targetSpeed;
+                    this.vy = Math.sin(finalAngle) * this.targetSpeed;
+
+                    // Sicherstellen, dass die Murmel tendenziell nach rechts und unten rollt
+                    // Dies bedeutet, dass, wenn die Murmel links vom Ausgang ist, ihre vx positiv sein sollte.
+                    // Wenn sie oberhalb des Ausgangs ist, sollte ihre vy positiv sein.
+                    // Dies ist die Interpretation von "niemals rückwärts rollen" in Kombination mit zufälligen Pfaden.
+                    if (this.x < exitX && this.vx < 0) this.vx = 0; // Verhindert Bewegung nach links, wenn Ausgang rechts ist
+                    if (this.y < exitY && this.vy < 0) this.vy = 0; // Verhindert Bewegung nach oben, wenn Ausgang unten ist
+
+                } else {
+                    // Wenn die Murmel sehr nah am Ausgang ist, richte sie direkt auf den Ausgang aus
+                    // um ein sicheres Erreichen zu gewährleisten und die Zeitvorgabe einzuhalten.
+                    this.vx = (exitX - this.x) / (deltaTime * 20); // Schnellere Bewegung zum Ziel
+                    this.vy = (exitY - this.y) / (deltaTime * 20);
+                }
+
+                // Überprüfen, ob die Murmel den Ausgangsbereich erreicht hat
+                if (distanceToExit < this.radius * 1.5 && !this.reachedExitTime) { // Etwas kleinerer Radius für präzises Erreichen
+                    this.reachedExitTime = Date.now(); // Zeitpunkt des Erreichens speichern
+                    updateScore(currentScore + 1); // Punktestand erhöhen
+                    this.markedForRemoval = true; // Sofort zum Entfernen markieren
+                }
+            }
+        }
+
+        /**
+         * Zeichnet den gesamten Spielzustand auf dem Canvas (Hintergrund, Eingang, Ausgang, Murmeln).
+         */
+        function drawGame() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Canvas leeren
+
+            // Eingangsbereich zeichnen (ohne Beschriftung)
+            ctx.fillStyle = 'rgba(0, 255, 0, 0.5)'; // Grün, halbtransparent
+            ctx.fillRect(entranceX - MARBLE_RADIUS, entranceY - MARBLE_RADIUS, MARBLE_RADIUS * 2, MARBLE_RADIUS * 2);
+
+            // Ausgangsbereich zeichnen (ohne Beschriftung)
+            ctx.fillStyle = 'rgba(255, 0, 0, 0.5)'; // Rot, halbtransparent
+            ctx.fillRect(exitX - MARBLE_RADIUS, exitY - MARBLE_RADIUS, MARBLE_RADIUS * 2, MARBLE_RADIUS * 2);
+
+            // Alle aktiven Murmeln zeichnen
+            marbles.forEach(marble => {
+                marble.draw(ctx);
+            });
+        }
+
+        // Spiel-Loop: Die Hauptschleife, die das Spiel aktualisiert und neu zeichnet
+        let lastFrameTime = Date.now(); // Initialisiere mit aktueller Zeit für setInterval
+        let marbleIdCounter = 0; // Zähler für eindeutige Murmel-IDs
+
+        /**
+         * Die Hauptschleife des Spiels, die bei jedem Frame aufgerufen wird.
+         * @param {number} currentTime - Der aktuelle Zeitpunkt in Millisekunden (vom Browser bereitgestellt).
+         */
+        function gameLoop() { // currentTime wird nicht mehr direkt von requestAnimationFrame übergeben
+            const currentTime = Date.now();
+            const deltaTime = currentTime - lastFrameTime; // Zeit seit dem letzten Frame in Millisekunden
+            lastFrameTime = currentTime;
+
+            // Erzeuge die erste Murmel sofort, wenn noch keine da ist und das Canvas gültige Dimensionen hat
+            if (marbles.length === 0 && canvas.width > 0 && canvas.height > 0) {
+                marbleIdCounter++;
+                marbles.push(new Marble(marbleIdCounter));
+                lastSpawnTime = currentTime; // Setze lastSpawnTime für die nächste Murmel
+            }
+            
+            // Neue Murmel erzeugen, wenn das nächste Spawn-Intervall erreicht ist (nach der ersten Murmel)
+            // Nur spawnen, wenn das Canvas gültige Dimensionen hat
+            if (marbles.length > 0 && currentTime - lastSpawnTime > nextSpawnInterval && canvas.width > 0 && canvas.height > 0) {
+                marbleIdCounter++;
+                marbles.push(new Marble(marbleIdCounter)); // Neue Murmel hinzufügen
+                lastSpawnTime = currentTime;
+                nextSpawnInterval = getRandomInt(5000, 15000); // Nächstes Spawn-Intervall zufällig festlegen
+            }
+
+            // Alle Murmeln aktualisieren
+            marbles.forEach(marble => {
+                marble.update(deltaTime);
+            });
+
+            // Murmeln entfernen, die zum Entfernen markiert wurden
+            marbles = marbles.filter(marble => !marble.markedForRemoval);
+
+            drawGame(); // Spiel neu zeichnen
+
+            // requestAnimationFrame(gameLoop); // Ersetzt durch setInterval für Hintergrundausführung
+        }
+
+        // Funktion zum Aktualisieren des Spielstands im Info-Bereich
+        // Lade den Spielstand beim Start aus dem Local Storage
+        let currentScore = parseInt(localStorage.getItem('gameScore')) || 0;
+        const scoreDisplay = document.getElementById('score-display');
+
+        /**
+         * Aktualisiert den angezeigten Spielstand und speichert ihn lokal.
+         * @param {number} newScore - Der neue Spielstand.
+         */
+        function updateScore(newScore) {
+            currentScore = newScore;
+            // Formatieren der Zahl mit Punkt als Tausendertrennzeichen
+            const formattedScore = currentScore.toLocaleString('de-DE');
+            if (scoreDisplay) {
+                scoreDisplay.textContent = formattedScore;
+            }
+            // Aktualisiere den Browser-Tab-Titel
+            document.title = `AM: ${formattedScore}`;
+            // Speichere den aktuellen Spielstand im Local Storage
+            localStorage.setItem('gameScore', currentScore.toString());
+
+            // Überprüfe auf neue Errungenschaften
+            achievementThresholds.forEach(threshold => {
+                // Finde, ob diese Errungenschaft bereits aufgezeichnet wurde
+                const existingAchievement = achievements.find(a => a.score === threshold);
+
+                // Wenn der aktuelle Punktestand den Schwellenwert erreicht oder überschreitet UND er noch nicht aufgezeichnet wurde
+                if (currentScore >= threshold && !existingAchievement) {
+                    const now = new Date();
+                    // Speichere den Timestamp, um Tage seit Erreichung einfacher zu berechnen
+                    const achievementTimestamp = now.getTime(); 
+
+                    achievements.push({
+                        score: threshold,
+                        timestamp: achievementTimestamp // Speichere Timestamp
+                    });
+                    // Errungenschaften nach Punktestand sortieren
+                    achievements.sort((a, b) => a.score - b.score);
+                    // Errungenschaften im Local Storage speichern
+                    localStorage.setItem('gameAchievements', JSON.stringify(achievements));
+                    renderAchievements(); // Errungenschaftenliste neu rendern
+                }
+            });
+        }
+
+        /**
+         * Rendert die Errungenschaftenliste im Info-Bereich.
+         */
+        function renderAchievements() {
+            const achievementsListElement = document.getElementById('achievements-list');
+            if (!achievementsListElement) return;
+
+            achievementsListElement.innerHTML = ''; // Vorhandene Liste leeren
+
+            achievementThresholds.forEach(threshold => {
+                const row = document.createElement('tr');
+                const targetCell = document.createElement('td');
+                const achievedCell = document.createElement('td');
+
+                targetCell.textContent = threshold.toLocaleString('de-DE'); // Punktestand mit Punkt formatieren
+                targetCell.classList.add('py-1', 'pr-2'); // Etwas Abstand hinzufügen
+
+                const achieved = achievements.find(a => a.score === threshold);
+                if (achieved) {
+                    const achievementDateObj = new Date(achieved.timestamp);
+                    // Format mit Wochentag (lang)
+                    const achievementDate = achievementDateObj.toLocaleDateString('de-DE', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' });
+                    const achievementTime = achievementDateObj.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+                    const daysSinceAchievement = Math.floor((Date.now() - achieved.timestamp) / (1000 * 60 * 60 * 24));
+                    
+                    achievedCell.textContent = `${achievementDate} ${achievementTime} (${daysSinceAchievement} Tage)`;
+                    achievedCell.classList.add('text-green-400'); // Grün für erreichte Errungenschaft
+                } else {
+                    achievedCell.textContent = 'Noch nicht erreicht';
+                    achievedCell.classList.add('text-gray-500'); // Grau für nicht erreichte Errungenschaft
+                }
+                achievedCell.classList.add('py-1');
+
+                row.appendChild(targetCell);
+                row.appendChild(achievedCell);
+                achievementsListElement.appendChild(row);
+            });
+        }
+
+        // Get modal elements
+        const resetButton = document.getElementById('reset-button');
+        const impressumButton = document.getElementById('impressum-button');
+        const newMarbleButton = document.getElementById('new-marble-button'); // Referenz zum neuen Murmel-Button
+
+        const resetModal = document.getElementById('reset-modal');
+        const resetConfirmYes = document.getElementById('reset-confirm-yes');
+        const resetConfirmNo = document.getElementById('reset-confirm-no');
+
+        // Impressum Modal Elemente
+        const impressumModal = document.getElementById('impressum-modal');
+        const impressumCloseButton = document.getElementById('impressum-close');
+        const impressumOkButton = document.getElementById('impressum-ok');
+
+        // Cookie Consent Modal Elemente
+        const cookieConsentModal = document.getElementById('cookie-consent-modal');
+        const cookieConsentOkButton = document.getElementById('cookie-consent-ok');
+        const cookieImpressumLink = document.getElementById('cookie-impressum-link');
+
+
+        // Function to show the modal
+        function showResetModal() {
+            resetModal.classList.remove('hidden');
+        }
+
+        // Function to hide the modal
+        function hideResetModal() {
+            resetModal.classList.add('hidden');
+        }
+
+        // Function to show the Impressum modal
+        function showImpressumModal() {
+            impressumModal.classList.remove('hidden');
+        }
+
+        // Function to hide the Impressum modal
+        function hideImpressumModal() {
+            impressumModal.classList.add('hidden');
+        }
+
+        // Function to show the Cookie Consent modal
+        function showCookieConsentModal() {
+            cookieConsentModal.classList.remove('hidden');
+        }
+
+        // Function to hide the Cookie Consent modal and set local storage flag
+        function hideCookieConsentModal() {
+            cookieConsentModal.classList.add('hidden');
+            localStorage.setItem('cookieConsentGiven', 'true'); // Merke, dass der Hinweis bestätigt wurde
+        }
+
+        // Function to reset the game
+        function resetGame() {
+            // Clear local storage
+            localStorage.removeItem('gameScore');
+            localStorage.removeItem('gameAchievements');
+            localStorage.removeItem('cookieConsentGiven'); // Auch den Cookie-Hinweis zurücksetzen
+
+            // Reset in-memory game state
+            currentScore = 0;
+            marbles = [];
+            achievements = [];
+            marbleIdCounter = 0;
+            lastSpawnTime = Date.now();
+            nextSpawnInterval = getRandomInt(5000, 15000); // Reset interval
+
+            // Update UI
+            updateScore(currentScore);
+            renderAchievements();
+
+            // Hide modal
+            hideResetModal();
+            // Optional: A full page reload might be desired for a completely fresh state
+            // window.location.reload(); 
+        }
+
+        // Function to manually spawn a marble
+        function spawnNewMarbleManually() {
+            if (canvas.width === 0 || canvas.height === 0) {
+                console.warn("Canvas not ready for spawning marbles.");
+                return;
+            }
+            marbleIdCounter++;
+            marbles.push(new Marble(marbleIdCounter));
+            lastSpawnTime = Date.now(); // Update last spawn time to respect interval
+        }
+
+        // Event Listeners for Reset button and modal confirmations
+        if (resetButton) {
+            resetButton.addEventListener('click', showResetModal);
+        }
+
+        if (resetConfirmYes) {
+            resetConfirmYes.addEventListener('click', resetGame);
+        }
+
+        if (resetConfirmNo) {
+            resetConfirmNo.addEventListener('click', hideResetModal);
+        }
+
+        // Event Listener for "Neue Murmel!" button
+        if (newMarbleButton) {
+            newMarbleButton.addEventListener('click', () => {
+                if (newMarbleButton.disabled) {
+                    return; // Prevent multiple clicks while disabled
+                }
+
+                spawnNewMarbleManually(); // Spawn the marble
+
+                // Disable button and apply visual feedback
+                newMarbleButton.disabled = true;
+                // Tailwind classes for disabled look are added via CSS rule :disabled
+                // newMarbleButton.classList.add('opacity-50', 'cursor-not-allowed'); 
+
+                // Re-enable button after 1 second (was 2 seconds)
+                setTimeout(() => {
+                    newMarbleButton.disabled = false;
+                    // newMarbleButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                }, 1000); // Changed from 2000 to 1000 ms
+            });
+        }
+
+        // Event Listeners for Impressum button and modal confirmations
+        if (impressumButton) {
+            impressumButton.addEventListener('click', showImpressumModal);
+        }
+
+        if (impressumCloseButton) {
+            impressumCloseButton.addEventListener('click', hideImpressumModal);
+        }
+
+        if (impressumOkButton) {
+            impressumOkButton.addEventListener('click', hideImpressumModal);
+        }
+
+        // Event Listeners for Cookie Consent modal
+        if (cookieConsentOkButton) {
+            cookieConsentOkButton.addEventListener('click', hideCookieConsentModal);
+        }
+
+        if (cookieImpressumLink) {
+            cookieImpressumLink.addEventListener('click', (event) => {
+                event.preventDefault(); // Verhindert das Standardverhalten des Links (Springen)
+                hideCookieConsentModal(); // Cookie-Modal schließen
+                showImpressumModal(); // Impressum-Modal öffnen
+            });
+        }
+
+
+        // Start des Spiel-Loops, wenn das Fenster vollständig geladen ist
+        window.onload = function() {
+            resizeCanvas(); // Sicherstellen, dass Canvas beim Laden korrekt dimensioniert ist
+            
+            // Errungenschaften aus Local Storage laden
+            try {
+                const storedAchievements = localStorage.getItem('gameAchievements');
+                if (storedAchievements) {
+                    achievements = JSON.parse(storedAchievements);
+                }
+            } catch (e) {
+                console.error("Fehler beim Laden der Errungenschaften aus localStorage:", e);
+                achievements = []; // Zurücksetzen, falls beschädigt
+            }
+
+            updateScore(currentScore); // Initialen (geladenen) Punktestand anzeigen und Errungenschaften prüfen
+            renderAchievements(); // Initiales Rendern der Errungenschaftenliste
+
+            // Überprüfe, ob der Cookie-Hinweis bereits bestätigt wurde
+            const cookieConsentGiven = localStorage.getItem('cookieConsentGiven');
+            if (!cookieConsentGiven) {
+                showCookieConsentModal(); // Zeige den Hinweis an, wenn er noch nicht bestätigt wurde
+            }
+
+            // Starte den Spiel-Loop mit setInterval für kontinuierliche Ausführung
+            setInterval(gameLoop, 1000 / 60); // ca. 60 Frames pro Sekunde
+        };
+    </script>
+</body>
+</html>
+
