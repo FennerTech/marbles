@@ -1,5 +1,5 @@
 <!-- -----------------------------------------------
-Automatic Marbles v1.0
+Automatic Marbles v1.1
 (c) 2025 Marco Fenner
 
 Urheberrechtlich geschützt.
@@ -19,157 +19,171 @@ Danke und Viel Spaß!
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 
-    <meta name="description" content="Automatic Marbles v1.0 - Ein faszinierendes Zero-Player-Game von Marco Fenner. Beobachten Sie, wie Murmeln ihren Weg zum Ziel finden und sammeln Sie Punkte.">
+    <meta name="description" content="Automatic Marbles v1.1 - Ein faszinierendes Zero-Player-Game von Marco Fenner. Beobachten Sie, wie Murmeln ihren Weg zum Ziel finden und sammeln Sie Punkte.">
     <meta name="keywords" content="Zero-Player Game, Automatic Marbles, Murmelspiel, Online Spiel, Browsergame, Marco Fenner, kostenlos, entspannend, Simulation">
     <meta name="author" content="Marco Fenner">
-    <meta name="robots" content="index, follow"> <link rel="canonical" href="https://fennertech.github.io/marbles/"> <meta property="og:title" content="Automatic Marbles v1.0 - Das Zero-Player-Game">
+    <meta name="robots" content="index, follow"> <link rel="canonical" href="https://fennertech.github.io/marbles/"> <meta property="og:title" content="Automatic Marbles v1.1 - Das Zero-Player-Game">
     <meta property="og:description" content="Beobachten Sie, wie Murmeln ihren Weg zum Ziel finden und sammeln Sie Punkte in diesem einzigartigen Zero-Player-Game.">
     <meta property="og:url" content="https://fennertech.github.io/marbles/">
     <meta property="og:type" content="website">
     <meta property="og:image" content="https://fennertech.github.io/marbles/social-share-image.png"> <meta property="og:locale" content="de_DE">
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Automatic Marbles v1.0 - Das Zero-Player-Game">
+    <meta name="twitter:title" content="Automatic Marbles v1.1 - Das Zero-Player-Game">
     <meta name="twitter:description" content="Beobachten Sie, wie Murmeln ihren Weg zum Ziel finden und sammeln Sie Punkte in diesem einzigartigen Zero-Player-Game.">
     <meta name="twitter:image" content="https://fennertech.github.io/marbles/social-share-image.png"> <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        <style>
         /* Grundlegende Stile für den gesamten Viewport */
         html, body {
             margin: 0;
-            padding: 0.5rem; /* p-2: Fügt einen inneren Abstand hinzu, um die Ränder freizuhalten */
-            overflow: hidden; /* Verhindert Scrollbalken */
-            height: 100%; /* Nimmt die volle volle Höhe des Viewports ein */
-            font-family: 'Inter', sans-serif; /* Standard-Schriftart */
-            background-color: #333; /* Dunkelgrauer Hintergrund */
-            color: #fff; /* Weiße Schriftfarbe */
-            box-sizing: border-box; /* Stellt sicher, dass Padding zur Gesamtgröße gehört */
-        }
-
-        /* Sicherstellen, dass der Hauptcontainer die volle Höhe einnimmt */
-        #game-container {
+            padding: 0; /* Padding vom Body entfernt, wird vom game-container verwaltet */
             height: 100%;
+            font-family: 'Inter', sans-serif;
+            background-color: #333;
+            color: #fff;
+            box-sizing: border-box; /* Box-Sizing für alle Elemente */
+        }
+
+        /* Universeller Box-Sizing-Reset für konsistente Größenberechnung */
+        *, *::before, *::after {
+            box-sizing: inherit;
+        }
+
+        /* Sicherstellen, dass der Hauptcontainer die volle Höhe einnimmt (Desktop-Ansicht) */
+        #game-container {
+            height: 100vh; /* 100% der Viewport-Höhe */
+            width: 100vw; /* 100% der Viewport-Breite */
             display: flex;
-            height: 100%; /* Jetzt 100% der verfügbaren Höhe nach Padding im Body */
-            width: 100%; /* Jetzt 100% der verfügbaren Breite nach Padding im Body */
+            padding: 0.5rem; /* Fügt den äußeren Abstand hinzu, um die Ränder freizuhalten */
+            gap: 0.5rem; /* Abstand zwischen Info-Bereich und Spielfeld */
         }
 
-        /* Info-Bereich (linkes Viertel) */
+        /* Info-Bereich (linkes Viertel - Desktop) */
         #info-area {
-            width: 25%; /* w-1/4 */
-            padding: 1rem; /* p-4 */
-            border: 1px solid #4b5563; /* border border-gray-600 */
-            border-radius: 0.5rem; /* rounded-lg */
-            display: flex; /* flex */
-            flex-direction: column; /* flex-col */
-            justify-content: space-between; /* justify-between */
-            margin-right: 0.5rem; /* Kleiner Abstand zum Spielfeld */
+            width: 25%;
+            padding: 1rem;
+            border: 1px solid #4b5563;
+            border-radius: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-y: auto; /* Vertikalen Scrollbalken hinzufügen, falls Inhalt zu lang */
+            flex-shrink: 0; /* Verhindert, dass der Info-Bereich schrumpft */
         }
 
-        /* Titel des Spiels */
+        /* Titel des Spiels (Desktop) */
         #info-area h2 {
-            font-size: 2.25rem; /* text-4xl */
-            font-weight: 700; /* font-bold */
-            margin-bottom: 0.5rem; /* mb-2 */
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
         }
 
-        /* Spielbeschreibung und Link */
+        /* Spielbeschreibung und Link (Desktop) */
         #info-area p.text-lg {
-            font-size: 1.125rem; /* text-lg */
-            color: #d1d5db; /* text-gray-300 */
-            margin-bottom: 1rem; /* mb-4 */
+            font-size: 1.125rem;
+            color: #d1d5db;
+            margin-bottom: 1rem;
         }
 
         #info-area a {
-            color: #60a5fa; /* text-blue-400 */
-            text-decoration: underline; /* underline */
+            color: #60a5fa;
+            text-decoration: underline;
         }
 
         #info-area a:hover {
-            color: #93c5fd; /* hover:text-blue-300 */
+            color: #93c5fd;
         }
 
         /* Flex-Grow für den mittleren Bereich */
         #info-area .flex-grow {
-            flex-grow: 1; /* flex-grow */
+            flex-grow: 1;
         }
 
-        /* Gesamtpunktzahl */
+        /* Gesamtpunktzahl (Desktop) */
         #score-display {
-            font-size: 2.25rem; /* text-4xl */
-            font-weight: 800; /* font-extrabold */
-            text-align: center; /* text-center */
-            margin-top: 1rem; /* mt-4 */
-            color: #fcd34d; /* text-yellow-300 */
+            font-size: 2.25rem;
+            font-weight: 800;
+            text-align: center;
+            margin-top: 1rem;
+            color: #fcd34d;
         }
 
-        /* Errungenschaften Bereich */
+        /* Errungenschaften Bereich (Desktop) */
         #achievements-area {
-            margin-top: 2rem; /* mt-8 */
-            margin-bottom: 2rem; /* mb-8 */
+            margin-top: 2rem;
+            margin-bottom: 2rem;
         }
 
         #achievements-area h3 {
-            font-size: 1.25rem; /* text-xl */
-            font-weight: 600; /* font-semibold */
-            margin-bottom: 0.5rem; /* mb-2 */
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
         }
 
         #achievements-area table {
-            width: 100%; /* w-full */
-            text-align: left; /* text-left */
-            font-size: 0.875rem; /* text-sm */
+            width: 100%;
+            text-align: left;
+            font-size: 0.875rem;
         }
 
         #achievements-area thead tr {
-            border-bottom: 1px solid #4b5563; /* border-b border-gray-600 */
+            border-bottom: 1px solid #4b5563;
         }
 
         #achievements-area th {
-            padding-top: 0.25rem; /* py-1 */
-            padding-bottom: 0.25rem; /* py-1 */
+            padding-top: 0.25rem;
+            padding-bottom: 0.25rem;
         }
 
         #achievements-area td {
-            padding-top: 0.25rem; /* py-1 */
-            padding-bottom: 0.25rem; /* py-1 */
+            padding-top: 0.25rem;
+            padding-bottom: 0.25rem;
         }
 
         #achievements-area td.pr-2 {
-            padding-right: 0.5rem; /* pr-2 */
+            padding-right: 0.5rem;
         }
 
         #achievements-area .text-green-400 {
-            color: #4ade80; /* text-green-400 */
+            color: #4ade80;
         }
 
         #achievements-area .text-gray-500 {
-            color: #6b7280; /* text-gray-500 */
+            color: #6b7280;
         }
 
-        /* Buttons Container */
-        #button-container { /* Spezifischer Selektor für den Button-Container */
-            margin-top: 1rem; /* mt-4 */
-            display: flex; /* flex */
-            justify-content: center; /* justify-content: center; für horizontale Zentrierung */
-            gap: 0.5rem; /* space-x-2 */
-            width: 100%; /* Sicherstellen, dass der Container die volle Breite einnimmt */
+        /* Buttons Container (Desktop) */
+        #button-container {
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center; /* Horizontale Zentrierung */
+            gap: 0.5rem; /* Abstand zwischen den Buttons */
+            width: 100%;
         }
 
-        /* Buttons */
+        /* Buttons (Desktop) */
         #button-container button {
-            font-weight: 700; /* font-bold */
-            padding: 0.5rem 1rem; /* py-2 px-4 - Etwas kleiner als vorher */
-            font-size: 1rem; /* text-base - Etwas kleiner als vorher */
-            border-radius: 0.5rem; /* rounded-lg */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
-            color: #fff; /* text-white */
-            transition: background-color 0.15s ease-in-out, opacity 0.15s ease-in-out; /* Für Hover-Effekt und Deaktivierung */
-            cursor: pointer; /* Zeigt an, dass es klickbar ist */
-            flex-grow: 0; /* Buttons füllen den verfügbaren Platz aus */
-            text-align: center; /* Text zentrieren */
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Leichter Textschatten für bessere Lesbarkeit */
-            letter-spacing: 0.05em; /* Leichter Zeichenabstand */
+            font-weight: 700;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            color: #fff;
+            transition: background-color 0.15s ease-in-out, opacity 0.15s ease-in-out;
+            cursor: pointer;
+            flex-grow: 0;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            letter-spacing: 0.05em;
         }
+
+        .bg-red-600 { background-color: #dc2626; }
+        .bg-red-600:hover { background-color: #b91c1c; }
+        .bg-blue-600 { background-color: #2563eb; }
+        .bg-blue-600:hover { background-color: #1d4ed8; }
+        .bg-green-600 { background-color: #16a34a; }
+        .bg-green-600:hover { background-color: #15803d; }
 
         /* Deaktivierter Button Stil */
         #button-container button:disabled {
@@ -177,39 +191,39 @@ Danke und Viel Spaß!
             cursor: not-allowed;
         }
 
-        /* Copyright-Text */
-        #info-area > div:last-of-type > p { /* Spezifischer Selektor für den Copyright-Text */
-            margin-top: 0.5rem; /* Abstand auf einen Zeilenumbruch reduziert */
-            text-align: center; /* text-center */
-            font-size: 0.875rem; /* text-sm */
-            color: #9ca3af; /* text-gray-400 */
+        /* Copyright-Text (Desktop) */
+        #info-area > div:last-of-type > p {
+            margin-top: 0.5rem;
+            text-align: center;
+            font-size: 0.875rem;
+            color: #9ca3af;
         }
 
-        /* Besucherzähler-Text */
+        /* Besucherzähler-Text (Desktop) */
         #visitor-counter-area {
-            margin-top: 1rem; /* Abstand über dem Zähler */
+            margin-top: 1rem;
             margin-bottom: 0.5rem; /* Abstand unter dem Zähler auf einen Zeilenumbruch reduziert */
-            font-size: 0.875rem; /* text-sm */
-            color: #9ca3af; /* text-gray-400 */
-            text-align: center; /* Zentriert den Textinhalt */
+            font-size: 0.875rem;
+            color: #9ca3af;
+            text-align: center;
             white-space: nowrap; /* Verhindert Zeilenumbruch */
         }
 
         #visitor-counter-area span {
-            /* Sicherstellen, dass die Spans inline sind und keine unerwünschten Abstände haben */
             display: inline;
-            margin: 0 0.25rem; /* Kleiner horizontaler Abstand zwischen den Werten */
+            margin: 0 0.25rem;
             padding: 0;
         }
 
-        /* Spielfeld */
+        /* Spielfeld (Desktop) */
         #game-field {
-            width: 75%; /* w-3/4 */
-            height: 100%; /* h-full */
-            background-color: #374151; /* bg-gray-700 */
-            border-radius: 0.5rem; /* rounded-lg */
-            box-sizing: border-box; /* Stellt sicher, dass Padding zur Gesamtgröße gehört */
-            margin-left: 0.5rem; /* Kleiner Abstand zum Info-Bereich */
+            width: 75%;
+            height: 100%; /* Füllt die verfügbare Höhe im Flex-Container aus */
+            background-color: #374151;
+            border-radius: 0.5rem;
+            box-sizing: border-box;
+            /* margin-left: 0.5rem; - Abstand wird jetzt durch gap im game-container geregelt */
+            flex-grow: 1; /* Erlaubt dem Spielfeld, den restlichen Platz einzunehmen */
         }
 
         /* Allgemeine Modal Stile */
@@ -223,70 +237,70 @@ Danke und Viel Spaß!
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 1000; /* Sicherstellen, dass es über allem liegt */
+            z-index: 1000;
         }
 
         .modal-content {
-            background-color: #374151; /* bg-gray-700 */
-            padding: 2rem; /* p-8 */
-            border-radius: 0.5rem; /* rounded-lg */
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-xl */
+            background-color: #374151;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
             text-align: center;
-            max-width: 600px; /* Breiter für Impressum */
+            max-width: 600px;
             color: #fff;
-            position: relative; /* Für absolute Positionierung des Close-Buttons */
-            max-height: 90vh; /* Maximale Höhe des Modals */
-            display: flex; /* Flexbox für Inhalt und Footer */
+            position: relative;
+            max-height: 90vh;
+            display: flex;
             flex-direction: column;
         }
 
         .modal-content h3 {
-            font-size: 1.5rem; /* text-2xl */
-            font-weight: 700; /* font-bold */
-            margin-bottom: 1rem; /* mb-4 */
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
             text-align: left;
         }
 
         .modal-content p {
-            font-size: 1rem; /* text-base */
-            margin-bottom: 1rem; /* mb-4 */
+            font-size: 1rem;
+            margin-bottom: 1rem;
             text-align: left;
             line-height: 1.5;
         }
 
         .modal-content .modal-text-content {
-            overflow-y: auto; /* Scrollbalken für Inhalt */
-            flex-grow: 1; /* Nimmt verfügbaren Platz ein */
-            padding-right: 1rem; /* Platz für Scrollbar */
-            margin-bottom: 1rem; /* Abstand zum Footer */
+            overflow-y: auto;
+            flex-grow: 1;
+            padding-right: 1rem;
+            margin-bottom: 1rem;
         }
         
         .modal-content .modal-text-content strong {
-            color: #fcd34d; /* Hellgelb für Überschriften im Impressum */
+            color: #fcd34d;
         }
 
         .modal-buttons {
             display: flex;
             justify-content: center;
-            gap: 1rem; /* space-x-4 */
-            margin-top: 1rem; /* Abstand zum Inhalt */
-            flex-shrink: 0; /* Verhindert Schrumpfen des Buttons */
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-shrink: 0;
         }
 
         /* Modal Buttons - Vergrößert und lesbarer */
         .modal-buttons button, .modal-close-button {
-            font-weight: 700; /* font-bold */
-            padding: 0.75rem 1.5rem; /* py-3 px-6 - Vergrößert */
-            font-size: 1.125rem; /* text-lg - Vergrößert */
-            border-radius: 0.5rem; /* rounded-lg */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
-            color: #fff; /* text-white */
-            transition: background-color 0.15s ease-in-out; /* Für Hover-Effekt */
-            cursor: pointer; /* Zeigt an, dass es klickbar ist */
-            flex-grow: 0; /* Nicht flex-grow:1, damit sie nicht den ganzen Platz einnehmen */
-            text-align: center; /* Text zentrieren */
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5); /* Leichter Textschatten für bessere Lesbarkeit */
-            letter-spacing: 0.05em; /* Leichter Zeichenabstand */
+            font-weight: 700;
+            padding: 0.75rem 1.5rem;
+            font-size: 1.125rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            color: #fff;
+            transition: background-color 0.15s ease-in-out;
+            cursor: pointer;
+            flex-grow: 0;
+            text-align: center;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            letter-spacing: 0.05em;
         }
 
         .modal-close-button {
@@ -303,12 +317,90 @@ Danke und Viel Spaß!
             box-shadow: none;
         }
         .modal-close-button:hover {
-            color: #ef4444; /* Rot beim Hover */
+            color: #ef4444;
         }
 
         /* Klasse zum Ein-/Ausblenden */
         .hidden {
-            display: none !important; /* Wichtig, um display:flex zu überschreiben */
+            display: none !important;
+        }
+
+        /* Mobile Anpassungen */
+        @media (max-width: 768px) {
+            #game-container {
+                flex-direction: column; /* Stapelt Info-Bereich und Spielfeld vertikal */
+                padding: 0.25rem; /* Weniger Padding am Rand auf Mobilgeräten */
+                gap: 0.25rem; /* Kleinerer Abstand zwischen den Bereichen */
+            }
+
+            #info-area {
+                width: 100%; /* Info-Bereich volle Breite */
+                margin-right: 0; /* Horizontalen Abstand entfernen */
+                margin-bottom: 0; /* Vertikalen Abstand entfernen (gap übernimmt) */
+                max-height: 40vh; /* Max. 40% der Viewport-Höhe für Info-Bereich */
+                overflow-y: auto; /* Scrollbalken, falls Inhalt zu lang */
+                padding: 0.75rem; /* Etwas reduziertes Padding */
+            }
+
+            #info-area h2 {
+                font-size: 1.5rem; /* Kleinerer Titel */
+            }
+            #info-area p.text-lg {
+                font-size: 0.875rem; /* Kleinere Beschreibung */
+            }
+            #score-display {
+                font-size: 2rem; /* Kleinere Punktzahl */
+            }
+
+            #achievements-area {
+                margin-top: 1rem; /* Margins reduzieren */
+                margin-bottom: 1rem;
+            }
+            #achievements-area h3 {
+                font-size: 1.1rem; /* Kleinerer Errungenschafts-Titel */
+            }
+            #achievements-area table {
+                font-size: 0.75rem; /* Kleinere Tabellen-Schrift */
+            }
+
+            #button-container button {
+                padding: 0.4rem 0.8rem; /* Kleinere Button-Polsterung */
+                font-size: 0.875rem; /* Kleinere Button-Schrift */
+            }
+
+            #visitor-counter-area {
+                margin-top: 0.5rem; /* Margin reduzieren */
+                margin-bottom: 0.25rem; /* Margin reduzieren */
+                font-size: 0.75rem; /* Kleinere Schrift für Besucherzähler */
+                white-space: normal; /* Erlaubt Zeilenumbruch für Besucherzähler */
+            }
+            #visitor-counter-area span {
+                margin: 0 0.1rem; /* Abstand zwischen Zähler-Elementen reduzieren */
+            }
+
+            #game-field {
+                width: 100%; /* Spielfeld volle Breite */
+                margin-left: 0; /* Horizontalen Abstand entfernen */
+                flex-grow: 1; /* Nimmt den restlichen vertikalen Platz ein */
+                height: auto; /* Höhe wird durch Flexbox gesteuert */
+                min-height: 50vh; /* Mindesthöhe für das Spielfeld */
+            }
+
+            /* Modals auch anpassen */
+            .modal-content {
+                max-width: 90vw; /* Breiter auf Mobilgeräten */
+                padding: 1rem; /* Kleineres Padding */
+            }
+            .modal-content h3 {
+                font-size: 1.25rem;
+            }
+            .modal-content p {
+                font-size: 0.9rem;
+            }
+            .modal-buttons button {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
@@ -317,7 +409,7 @@ Danke und Viel Spaß!
 
     <div id="game-container">
         <div id="info-area">
-            <h2>Automatic Marbles v1.0</h2>
+            <h2>Automatic Marbles v1.1</h2>
             <p>
                 Ein neues Zero-Player-Game<br>
                 vom <a href="mailto:datenschrauber@posteo.de">Datenschrauber</a>
@@ -997,4 +1089,3 @@ Danke und Viel Spaß!
     </script>
 </body>
 </html>
-
